@@ -9,8 +9,8 @@ We have seen how we can open `vim path/to/file` and how we can use the command `
 
 Next we will enter a command now to jump directly to a file. Recall that we launched VIM in the *kata1* folder, so relative paths are from there.
 
-`:edit 1-navigating-folders-files/c-instructions.md`
+1. `:edit 1-navigating-folders-files/c-instructions.md`
 
-> Tip: You can use `:e` as a shorthand command for `:edit`
+> Tip 1: You can use `:e` as a shorthand command for `:edit`
 
-> Tip: You can see what the root folder you are operating from by executing the command `:pwd` (print working directory)
+> Tip 2: You can see what the root folder you are operating from by executing the command `:pwd` (print working directory)

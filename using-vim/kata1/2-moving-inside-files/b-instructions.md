@@ -127,21 +127,21 @@ https://www.asciiart.website/index.php?art=objects/arrows
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 You should use `gg` instead of scrolling up 1 jump at a time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -205,5 +205,5 @@ You should use `gg` instead of scrolling up 1 jump at a time.
 
 > Note: You can also use `[[` and `]]` jump to the beginning and the end of the document.
 
-Once you are comfortable moving to the beginning and end of the document, continue by navigating to (however you prefer)
+7. Once you are comfortable moving to the beginning and end of the document, continue by navigating to (however you prefer)
 *2-moving-inside-files/c-instructions.md*

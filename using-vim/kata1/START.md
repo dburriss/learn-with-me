@@ -25,4 +25,6 @@ So lets get started. On your command line, make sure the directory is set to the
 
 > Tip: If at any point you get stuck, you can quit VIM by hitting ESC and then `:q!`
 
-`vim 1-navigating-folders-files/a/a-instructions.md`
+If already in vim type: `:e 1-navigating-folders-files/a-instructions.md`  
+OR  
+In your terminal run: `vim 1-navigating-folders-files/a-instructions.md`

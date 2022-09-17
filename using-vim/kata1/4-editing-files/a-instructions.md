@@ -1,24 +1,28 @@
 # Editing files (1/3)
 
-As mentioned before, VIM is about more than typing characters. It is about manipulating documents.  
+As mentioned before, Vim is about more than typing characters. It is about manipulating documents.  
 So far we have used NORMAL mode and COMMAND mode. First we will use INSERT mode for inserting characters. Then we will make use of VISUAL and VISUAL LINE mode for selecting text.
 
 ## Instructions
 
+We are going to use the Example text below to create a new file.
+
+> Tip: You can always use `u` in NORMAL mode to undo a change in a buffer.
+
 ### Creating the heading
 
 1. Type command `:vsplit 4-editing-files/text.md`. text.md does not exist but now we have a buffer open for it.
-2. Use `Ctrl+w, w` to make sure you are toggled to the new *text.md* file. You can make sure you are on the correct buffer by using the `:ls` command. The buffer that is currently active will have a %a while the other visible buffer (these instructions) will have a #a.
+2. The new window should have focus but you can use `Ctrl+w, w` to toggle to the new *text.md* file if needed. You can make sure you are on the correct buffer by using the `:ls` command. The buffer that is currently active will have a %a while the other visible buffer (these instructions) will have a #a.
 3. Press `i` to enter INSERT mode. Type the following: "# The case for nuclear energy". Press ENTER twice for 2 newlines.
 4. Press ESC to exit INSERT mode.
 5. Let's actually create the file on the filesystem now. Run the command `:w` to write the buffer to the file text.md.
 
 ### Copying the first paragraph
 
-6. Toggle so you are on the buffer containing these instructions. In NORMAL mode move the cursor to the beginning of the paragraph starting with "Nuclear energy has a bad reputation".
+6. Toggle so you are on the buffer containing these instructions. In NORMAL mode move the cursor to the beginning of the paragraph starting with "Nuclear energy has a bad reputation" (line 46 Hint: `46gg` will get you there fast).
 7. Now enter VISUAL mode by pressing `v`. We can use any of the usual movement keys to select the paragraph. The easiest is probably to press `}` (`Shift+]`) to move to the end of the paragraph.
 8. Press `y` for yank. This is VIM's version of copy where it saves it in a register for later use.
-9. Use the motion `Ctrl+w,w` to move to the text.md window and push `p` (for paste) it on line 3.
+9. Use the motion `Ctrl+w,w` to move to the text.md window and push `p` (for paste) it on line 3 of text.md.
 
 ### Copying the heading 2
 
