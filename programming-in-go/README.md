@@ -53,7 +53,7 @@ func main() {
 }
 ```
 
-Our application is a single module with all our source code in it. A module can have many packages in it. As you can see above, our hello.go code is declared in a package called "main". Package `main` has special meaning in Go as it is used as the entrypoint to an application.
+Our application is a single module with all our source code in it. A module can have many packages in it. As you can see above, our hello.go code is declared in a package called "main". Package `main` has special meaning in Go as it is used as the entrypoint to an application. The recommended practice is to have other packages contained in a folder with the same package name.
 
 Then we can build and run with the `run` command.
 
@@ -73,6 +73,12 @@ a multiline package
 looks like this
 */
 ```
+
+Comments can be turned into documentation, so it is common to comment on `package` and `func` declarations. You can [read more here](https://go.dev/doc/comment).
+
+The [godoc](https://pkg.go.dev/golang.org/x/tools/cmd/godoc) tool extracts comments from source code and runs as a server.
+
+
 
 ## Types
 
@@ -129,7 +135,7 @@ world = "Mars" // compiler error: cannot assign to world (constant "World" of ty
 fmt.Printf("Hello, %s!", world)
 ```
 
-The are multiple ways of declaring more complex types like using `new(T)`. The way in the code below demonstrates explicitly setting each field.
+There are multiple ways of declaring more complex types, like using `new(T)`. The way in the code below demonstrates explicitly setting each field.
 
 ```go
 type World struct {
@@ -154,7 +160,7 @@ The dereference operator `*` is used to access the value the pointer is addresse
 var namePtr *string = new(string)
 // use deference operator to assign a string value
 *namePtr = "Bob"
-// use reference operator to get value the pointer is addressing
+// use dereference operator to get value the pointer is addressing
 name := *namePtr
 // print values
 fmt.Print(namePtr, " ", name)
@@ -176,13 +182,14 @@ fmt.Print(address, " ", name)
 
 ## Collections
 
-An **array** in Go is declared backwards to most other languages with syntax `[size]T`. They are zero indexed and elements are indexed just like in many other languages. The compiler will complain if you try reference an index that is out of bounds.
+An **array** in Go is declared backwards to most other languages, with the syntax `[size]T`. They use a zero-based index and elements are indexed just like in many other languages. The compiler will complain if you try reference an index that is out of bounds.
 
 ```go
 var intArr [3]int
 intArr[0] = 1
 intArr[1] = 2
 intArr[2] = 3
+intArr[3] = 4 // compile error
 
 fmt.Println(intArr[0])
 fmt.Println(intArr)
@@ -211,6 +218,15 @@ slice := intArr[0:1]// a range of index 0 and up to but not including 1
 fmt.Println(intArr, slice) // output: [1 2 3] [1]
 ```
 
+If you do not want to worry about the underlying array, you can declare the slice directly like so. There are functions to use with a `slice` like `append` that allow you to operate on the array (and get a copy back).
+
+```go
+var dynamicSlice []int
+dynamicSlice = append(dynamicSlice, 1)
+fmt.Println(dynamicSlice)
+// output: [1]
+```
+
 If you need dynamic key value pairs you can use a **map**.
 
 ```go
@@ -224,7 +240,7 @@ fmt.Println(ages)
 
 Go has the usual `if-else`, `switch`, and `for` control structures common in most languages.
 
-The `if-else` is pretty standard. The `else` of course is not always required.
+The `if-else` is pretty standard. The `else` of course is optional.
 
 ```go
 // create the variable `value` with type `any` which is an alias for `interface{}`
@@ -240,7 +256,7 @@ if ok {
 }
 ```
 
-**Switch** statements are also pretty standard with a nice ability to be able to be able to test both conditions like `if` as well as type assertions as seen below.
+**Switch** statements are also pretty standard with a nice ability to be able to test both conditions like an `if`, as well as type assertions as seen below.
 
 ```go
 var value any = "Bob"
@@ -265,7 +281,7 @@ for i := 0; i < 10; i++ {
 }
 ```
 
-You can use the `range` clause to loop of `string`, `array`, `slice`, or `map`. This is sometimes a foreach in other languages.
+You can use the `range` clause to loop over `string`, `array`, `slice`, `map`, or `chan`(explained later). This is sometimes known as a foreach in other languages.
 
 ```go
 arr := [10]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -330,7 +346,7 @@ func main() {
 }
 ```
 
-Go has first class support for functions. This means functions can be assigned to variables and passing into other functions as arguments.
+Go has first class support for functions. This means functions can be assigned to variables and passed into other functions as arguments.
 
 ```go
 arr := []int{0, 1, 3, 4}
@@ -374,7 +390,7 @@ world.IsHospitable()
 
 Now that we understand how to add methods to a type it is a good time to talk about Go interfaces. A type does not explicitly implement an interface in Go. If it implements the members of the interface, then it implicitly implements that type.
 
-As an example lets look at the [Formatter](https://pkg.go.dev/fmt#Formatter) interface from the standard go `fmt` package.
+As an example, lets look at the [Formatter](https://pkg.go.dev/fmt#Formatter) interface from the standard Go `fmt` package.
 
 ```go
 type Formatter interface {
@@ -442,7 +458,7 @@ fmt.Println("Filtered", filtered)
 
 ## Concurrency
 
-One of the core design principles of Go is to have primitives for concurrent programming baked into the language.
+One of the core design principles of Go is to have primitives for concurrent programming baked into the language. Let's start with this non-concurrent program that prints out the number of moons for each planet in the Solar system.
 
 ```go
 func scan(planet string) {
@@ -494,13 +510,13 @@ Neptune has 14 moon(s).
 
 Now what if we want the scans to happen concurrently? When we run a Go application it is running on something called the main Goroutine. You can think of a Goroutine like a thread but it is super lightweight.
 
-We can then use `go` keyword to spawn a new Goroutine. This will run each scan of each planet in it's own Goroutine. The only line that changes is the single line within the `for` loop.
+We can then use the `go` keyword to spawn a new Goroutine. This will run each scan of each planet in it's own Goroutine. The only line that changes is the single line within the `for` loop.
 
 ```go
 go scan(planet)
 ```
 
-When you run the application now you may notice something weird. Nothing is output to the console. The reason for this is because after spawning the Goroutines the main one keeps executing. It reaches the end of the program and then shuts down. Those child Goroutines never finish executing before the main Goroutine finishes.
+When you run the application now you may notice something weird. Nothing is output to the console. The reason for this is because after spawning the *goroutines*, the main one keeps executing. It reaches the end of the program and then shuts down. Those child *goroutines* never finish executing before the main Goroutine finishes.
 
 We can "fix" this by making the main Goroutine sleep for a bit before exiting.
 
@@ -516,14 +532,14 @@ func main() {
 }
 ```
 
-By playing with the range of how long the main Goroutine sleeps for, you can get none, some, or all of the planet info to print out. Try play with ranges from 100 microseconds to 2000 microseconds. On my machine anything over 800 microseconds printed out all planet info.
+By playing with the range of how long the main *goroutine* sleeps for, you can get none, some, or all of the planet info to print out. Try play with ranges from 100 microseconds to 2000 microseconds. On my machine anything over 800 microseconds printed out all planet info.
 
-Let's loop at a less hacky way of waiting for all child Goroutines to finish.
+Let's look at a less hacky way of waiting for all child *goroutines* to finish.
 We will make use of a `sync.WaitGroup`. 
 
-Each time we spawn a new Goroutine, we will increment the state of the `WaitGroup` using the `Add` method. Then in each Goroutine we pass a reference to the `WaitGroup`. We can then call the `Done()` method on the `WaitGroup` at the end of each `scan`. 
+Each time we spawn a new Goroutine, we will increment the state of the `WaitGroup` using the `Add` method. Then in each *goroutine*, we pass a reference to the `WaitGroup`. We can then call the `Done()` method on the `WaitGroup` at the end of each `scan`. 
 
-The final step is to use the `Wait` method on the `WaitGroup` instance to wait for all `Done` calls. There is no magic here. `Wait` will just wait until the number accumulated with `Add` calls equals the number of `Done` calls.
+The final step is to use the `Wait` method on the `WaitGroup` instance to wait for all `Done` calls. There is no magic here. `Wait` will just wait until the number accumulated with the `Add` calls equals the number of `Done` calls.
 
 ```go
 // now scan takes `WaitGroup` reference
@@ -573,6 +589,8 @@ func main() {
 
 The final piece to concurrent programming is **channels**. These are the mechanism that *goroutines* use to communicate with one another. Channels behave a bit like message queues except they block until the other side is ready to send or receive. Like *goroutines* these are built into the language and use the `chan` keyword and make use of the `<-` operator to send and receive messages on the channel.
 
+Below is a simple example of 2 *goroutines* communicating via a channel.
+
 ```go
 func main() {
 	var wg sync.WaitGroup
@@ -598,9 +616,9 @@ func main() {
 }
 ```
 
-Above the we have 1 goroutine sending on a channel and another receiving on that same channel. We still use all the same techniques we learned about previously using `WaitGroup`.
+The first *goroutine* is sending on a channel and another is receiving on that same channel. We still use all the same techniques we learned about previously using `WaitGroup`.
 
-In many programs we will have a dynamic list of goroutines kicking off and we will need to get communication back via a channel. If the application is processing a finite list (ie. not listening indefintely) we might want to loop over all messages in the channel.
+In many programs we will have a dynamic list of goroutines kicking off and we will need to get communication back via a channel. If the application is processing a finite list (ie. not listening indefinitely) we might want to loop over all messages in the channel.
 
 > Important bits are commented.
 
@@ -650,7 +668,7 @@ func scan(ch chan World, wg *sync.WaitGroup, world World) {
 	time.Sleep(1000 * time.Millisecond)
 	// send world with updated scan data
 	ch <- world
-	// work is done
+	// notify that work is done
 	wg.Done()
 }
 
@@ -697,14 +715,14 @@ var wg sync.WaitGroup
 ch := make(chan World)
 ```
 
-For each *goroutine* of `scan` we kick off we increment the `wg WaitGroup`.
+For each *goroutine* of `scan` that we kick off, we increment the `wg WaitGroup`.
 
 ```go
 wg.Add(1)
 go scan(ch, &wg, newWorld(name))
 ```
 
-Within the `scan` function that is running as a *goroutine* we put a message on the channel and then tell the `WaitGroup` the asynchronous work is done.
+Within the `scan` function that is running as a *goroutine*, we put a message on the channel and then tell the `WaitGroup` the asynchronous work is done.
 
 ```go
 ch <- world
